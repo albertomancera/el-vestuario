@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EquipoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,3 +19,9 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/equipos/unirse', [EquipoController::class, 'join'])->name('equipos.join')->middleware(['auth', 'verified']);
+Route::post('/equipos/unirse', [EquipoController::class, 'joinStore'])->name('equipos.joinStore')->middleware(['auth', 'verified']);
+
+Route::resource('equipos', EquipoController::class)->middleware(['auth', 'verified']);
