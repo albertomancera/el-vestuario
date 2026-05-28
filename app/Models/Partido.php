@@ -9,15 +9,16 @@ class Partido extends Model
 {
     use HasFactory;
 
-    protected $table = 'partidos';
-    
     protected $fillable = [
-        'equipo_id', 
-        'fecha', 
-        'hora', 
-        'lugar', 
-        'coste_pista', 
-        'cancelado'
+        'equipo_id',
+        'fecha',
+        'hora',
+        'lugar',
+        'coste_pista',
+        'cancelado',
+        'goles_equipo',
+        'goles_rival',
+        'cronica_cerrada'
     ];
 
     public function equipo()
@@ -27,8 +28,14 @@ class Partido extends Model
 
     public function usuarios()
     {
+        // Hemos quitado 'rol' de aquí. Solo necesitamos 'goles'
         return $this->belongsToMany(User::class, 'partido_user')
-                    ->withPivot('asistencia', 'pagado', 'goles', 'asistencias')
+                    ->withPivot(['goles']) 
                     ->withTimestamps();
+    }
+
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class);
     }
 }

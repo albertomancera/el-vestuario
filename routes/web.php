@@ -31,5 +31,7 @@ Route::post('/equipos/{equipo}/partidos', [PartidoController::class, 'store'])->
 Route::get('/equipos/{equipo}/partidos/{partido}', [PartidoController::class, 'show'])->name('partidos.show')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/apuntarse', [PartidoController::class, 'apuntarse'])->name('partidos.apuntarse')->middleware(['auth', 'verified']);
 Route::get('/equipos/{equipo}/estadisticas', [EquipoController::class, 'estadisticas'])->name('equipos.estadisticas')->middleware(['auth', 'verified']);
+Route::post('/equipos/{equipo}/partidos/{partido}/comentar', [PartidoController::class, 'comentar'])->name('partidos.comentar')->middleware(['auth', 'verified']);
+Route::post('/equipos/{equipo}/partidos/{partido}/resultado', [PartidoController::class, 'guardarResultado'])->name('partidos.resultado')->middleware(['auth', 'verified']);
 
 Route::resource('equipos', EquipoController::class)->middleware(['auth', 'verified']);

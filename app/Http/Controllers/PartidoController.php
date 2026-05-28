@@ -72,12 +72,62 @@ class PartidoController extends Controller
 
         return view('partidos.show', compact('equipo', 'partido', 'clima'));
     }
+
     // Función para que un jugador se apunte o se borre del partido
     public function apuntarse(Equipo $equipo, Partido $partido)
     {
         // El método 'toggle' hace la magia: si el usuario no está apuntado, lo apunta. Si ya estaba, lo borra.
         $partido->usuarios()->toggle(auth()->user()->id);
 
-        return back(); // Recargamos la página donde estábamos
+        // Recargamos la página enviando el mensaje de éxito para que salte la animación
+        return back()->with('success', 'Tu estado en el partido ha cambiado correctamente.');
+    }
+
+    // Guardar un comentario en el muro del partido
+    public function comentar(Request $request, Equipo $equipo, Partido $partido)
+    {
+        // Validamos que no envíen un mensaje vacío
+        $request->validate([
+            'mensaje' => 'required|string|max:1000'
+        ]);
+
+        // Creamos el comentario asociado al partido y al usuario actual
+        $partido->comentarios()->create([
+            'user_id' => auth()->id(),
+            'mensaje' => $request->mensaje
+        ]);
+
+        return back()->with('success', 'Comentario publicado en el muro.');
+    }
+
+    // Guardar el resultado final del partido y los goles de los jugadores
+    public function guardarResultado(Request $request, Equipo $equipo, Partido $partido)
+    {
+        // 1. Validamos los goles globales
+        $request->validate([
+            'goles_equipo' => 'required|integer|min:0',
+            'goles_rival' => 'required|integer|min:0',
+        ]);
+
+        // 2. Guardamos el resultado general y cerramos el acta
+        $partido->update([
+            'goles_equipo' => $request->goles_equipo,
+            'goles_rival' => $request->goles_rival,
+            'cronica_cerrada' => true,
+        ]);
+
+        // 3. Si se han enviado goles individuales, los añadimos en la tabla intermedia (pivote)
+        if ($request->has('goles_jugadores')) {
+            foreach ($request->goles_jugadores as $jugadorId => $goles) {
+                if ($goles > 0) {
+                    // Actualizamos la columna 'goles' de ese jugador en este partido concreto
+                    $partido->usuarios()->updateExistingPivot($jugadorId, [
+                        'goles' => $goles
+                    ]);
+                }
+            }
+        }
+
+        return back()->with('success', '¡Marcador y acta del partido publicados con éxito!');
     }
 }
