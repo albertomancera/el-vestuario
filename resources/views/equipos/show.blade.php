@@ -11,8 +11,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             
+            <!-- Columna Izquierda: Info y Jugadores -->
             <div class="md:col-span-2 space-y-6">
                 
+                <!-- Lista de Jugadores -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                         <h3 class="text-lg font-bold text-gray-800">Plantilla del Equipo</h3>
@@ -38,9 +40,42 @@
                         </ul>
                     </div>
                 </div>
+
+                <!-- NUEVA CAJA DE PARTIDOS -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6">
+                    <div class="p-6 border-b border-gray-200 bg-gray-50">
+                        <h3 class="text-lg font-bold text-gray-800">Partidos Convocados</h3>
+                    </div>
+                    <div class="p-6">
+                        @if($equipo->partidos->isEmpty())
+                            <p class="text-gray-500 text-center py-4">No hay partidos programados. ¡Anímate a convocar uno!</p>
+                        @else
+                            <ul class="divide-y divide-gray-200">
+                                @foreach($equipo->partidos as $partido)
+                                    <li class="py-4 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition">
+                                        <div>
+                                            <p class="font-bold text-gray-800 text-lg">
+                                                📅 {{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }} a las {{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }}
+                                            </p>
+                                            <p class="text-sm text-gray-500 mt-1">
+                                                📍 {{ $partido->lugar }} &nbsp;|&nbsp; 💰 Total: {{ $partido->coste_pista }} €
+                                            </p>
+                                        </div>
+                                        <a href="{{ route('partidos.show', [$equipo->id, $partido->id]) }}" class="bg-blue-100 text-blue-700 px-4 py-2 rounded font-bold hover:bg-blue-200 transition whitespace-nowrap">
+                                            Ver Detalles &rarr;
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </div>
+
             </div>
 
+            <!-- Columna Derecha: Panel de Control -->
             <div class="space-y-6">
+                <!-- Código de Invitación -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Código de Invitación</h3>
@@ -51,11 +86,12 @@
                     </div>
                 </div>
 
+                <!-- Botones de Acción -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 flex flex-col space-y-3">
-                        <button class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition shadow">
+                        <a href="{{ route('partidos.create', $equipo->id) }}" class="block text-center w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition shadow">
                             📅 Convocar Partido
-                        </button>
+                        </a>
                         <button class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition shadow">
                             📊 Ver Estadísticas
                         </button>
