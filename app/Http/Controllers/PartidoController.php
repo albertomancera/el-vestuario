@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipo;
 use App\Models\Partido;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PartidoController extends Controller
 {
@@ -44,17 +45,33 @@ class PartidoController extends Controller
         return redirect()->route('equipos.show', $equipo->id);
     }
 
-    // Mostrar la ficha de un partido concreto
+   // Mostrar la ficha de un partido concreto y consultar la API del clima
     public function show(Equipo $equipo, Partido $partido)
     {
-        // Verificamos por seguridad que este partido pertenece a este equipo
         if ($partido->equipo_id !== $equipo->id) {
             abort(404);
         }
 
-        return view('partidos.show', compact('equipo', 'partido'));
-    }
+        // --- INTEGRACIÓN API OPENWEATHER ---
+        $apiKey = env('OPENWEATHER_API_KEY');
+        $ciudad = 'Madrid'; 
+        $url = "https://api.openweathermap.org/data/2.5/weather?q={$ciudad}&appid={$apiKey}&units=metric&lang=es";
 
+        $clima = null;
+        try {
+            // Hacemos la petición. El withoutVerifying() evita problemas de SSL en tu PC local.
+            $respuesta = Http::timeout(3)->withoutVerifying()->get($url);
+            
+            if ($respuesta->successful()) {
+                $clima = $respuesta->json();
+            }
+        } catch (\Exception $e) {
+            // Si la API falla o sigue inactiva, cargamos la página normal sin el clima
+        }
+        // ------------------------------------
+
+        return view('partidos.show', compact('equipo', 'partido', 'clima'));
+    }
     // Función para que un jugador se apunte o se borre del partido
     public function apuntarse(Equipo $equipo, Partido $partido)
     {
