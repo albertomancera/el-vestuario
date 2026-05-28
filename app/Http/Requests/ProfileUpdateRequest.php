@@ -26,6 +26,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            // Añadimos las reglas para los nuevos campos
+            'posicion' => ['nullable', 'string', 'max:255'],
+            'foto' => ['nullable', 'image', 'max:2048'], // Solo imágenes y máximo 2MB
         ];
     }
 }

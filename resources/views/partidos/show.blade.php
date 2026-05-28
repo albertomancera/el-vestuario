@@ -64,9 +64,14 @@
                         <ul class="divide-y divide-gray-200 border-t border-b border-gray-200">
                             @foreach($partido->usuarios as $jugador)
                                 <li class="py-3 flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">
-                                        {{ substr($jugador->name, 0, 1) }}
-                                    </div>
+                                    @if($jugador->foto)
+                                        <img src="{{ asset('storage/' . $jugador->foto) }}" alt="Foto de {{ $jugador->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow-sm">
+                                    @else
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 shadow-sm">
+                                            {{ substr($jugador->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    
                                     <span class="font-bold text-gray-900 text-lg">{{ $jugador->name }}</span>
                                 </li>
                             @endforeach

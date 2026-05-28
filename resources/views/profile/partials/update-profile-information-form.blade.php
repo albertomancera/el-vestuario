@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -47,6 +47,30 @@
             @endif
         </div>
 
+        <div>
+            <x-input-label for="posicion" value="Posición en el campo" />
+            <select id="posicion" name="posicion" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                <option value="">Selecciona tu posición...</option>
+                <option value="Portero" {{ old('posicion', $user->posicion) == 'Portero' ? 'selected' : '' }}>Portero</option>
+                <option value="Defensa" {{ old('posicion', $user->posicion) == 'Defensa' ? 'selected' : '' }}>Defensa</option>
+                <option value="Centrocampista" {{ old('posicion', $user->posicion) == 'Centrocampista' ? 'selected' : '' }}>Centrocampista</option>
+                <option value="Delantero" {{ old('posicion', $user->posicion) == 'Delantero' ? 'selected' : '' }}>Delantero</option>
+            </select>
+            <x-input-error class="mt-2" :messages="$errors->get('posicion')" />
+        </div>
+
+        <div>
+            <x-input-label for="foto" value="Foto de Perfil (Opcional)" />
+            <input type="file" id="foto" name="foto" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+            <x-input-error class="mt-2" :messages="$errors->get('foto')" />
+            
+            @if($user->foto)
+                <div class="mt-4">
+                    <p class="text-sm text-gray-500 mb-2">Foto actual:</p>
+                    <img src="{{ asset('storage/' . $user->foto) }}" alt="Foto de perfil" class="w-20 h-20 rounded-full object-cover border-2 border-gray-200">
+                </div>
+            @endif
+        </div>
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
