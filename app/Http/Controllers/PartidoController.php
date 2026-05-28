@@ -11,6 +11,12 @@ class PartidoController extends Controller
     // Mostrar la pantalla para crear un partido
     public function create(Equipo $equipo)
     {
+        // Seguridad: Si no es capitán, le damos un error 403 (Prohibido)
+        $esCapitan = $equipo->usuarios()->where('user_id', auth()->id())->first()->pivot->rol === 'capitan';
+        if (!$esCapitan) {
+            abort(403, 'Solo el capitán del equipo puede convocar partidos.');
+        }
+
         return view('partidos.create', compact('equipo'));
     }
 

@@ -54,7 +54,7 @@
                     </div>
                     <div class="p-6">
                         @if($equipo->partidos->isEmpty())
-                            <p class="text-gray-500 text-center py-4">No hay partidos programados. ¡Anímate a convocar uno!</p>
+                            <p class="text-gray-500 text-center py-4">No hay partidos programados.</p>
                         @else
                             <ul class="divide-y divide-gray-200">
                                 @foreach($equipo->partidos as $partido)
@@ -76,30 +76,44 @@
                         @endif
                     </div>
                 </div>
-
             </div>
 
             <div class="space-y-6">
+                
+                @if($esCapitan)
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-yellow-200">
+                        <div class="p-6 bg-yellow-50">
+                            <h3 class="text-sm font-bold text-yellow-800 uppercase tracking-wider mb-2 flex items-center">
+                                👑 Solo Capitán
+                            </h3>
+                            <p class="text-xs text-gray-600 mb-3">Código de Invitación del equipo:</p>
+                            <div class="bg-white border border-yellow-200 p-3 rounded text-center text-2xl font-mono tracking-widest font-bold text-gray-800 shadow-inner">
+                                {{ $equipo->codigo_invitacion }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <a href="{{ route('partidos.create', $equipo->id) }}" class="block text-center w-full bg-green-600 text-white font-bold py-3 px-4 rounded hover:bg-green-700 transition shadow-lg transform hover:scale-105">
+                                📅 Convocar Nuevo Partido
+                            </a>
+                        </div>
+                    </div>
+                @else
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                        <p class="text-blue-800 font-medium">Solo el capitán puede convocar partidos e invitar a nuevos jugadores.</p>
+                    </div>
+                @endif
+
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
-                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Código de Invitación</h3>
-                        <div class="bg-gray-100 p-3 rounded text-center text-2xl font-mono tracking-widest font-bold text-gray-800">
-                            {{ $equipo->codigo_invitacion }}
-                        </div>
-                        <p class="text-xs text-gray-500 mt-2 text-center">Comparte este código con tus amigos para que se unan al equipo.</p>
+                        <a href="{{ route('equipos.estadisticas', $equipo->id) }}" class="block text-center w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition shadow">
+                            📊 Ver Estadísticas
+                        </a>
                     </div>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 flex flex-col space-y-3">
-                        <a href="{{ route('partidos.create', $equipo->id) }}" class="block text-center w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition shadow">
-                            📅 Convocar Partido
-                        </a>
-                        <button class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition shadow">
-                            📊 Ver Estadísticas
-                        </button>
-                    </div>
-                </div>
             </div>
 
         </div>

@@ -40,13 +40,16 @@ class EquipoController extends Controller
         // 4. Lo devolvemos a la pantalla de sus equipos con un mensaje de éxito
         return redirect()->route('equipos.index');
     }
-    public function show(Equipo $equipo) {
-        // Traemos a todos los jugadores que pertenecen a este equipo
+    public function show(Equipo $equipo)
+    {
         $jugadores = $equipo->usuarios;
         
-        // Enviamos el equipo y sus jugadores a la pantalla
-        return view('equipos.show', compact('equipo', 'jugadores'));
+        // Comprobamos si el usuario actual tiene el rol de 'capitan' en este equipo
+        $esCapitan = $equipo->usuarios()->where('user_id', auth()->id())->first()->pivot->rol === 'capitan';
+
+        return view('equipos.show', compact('equipo', 'jugadores', 'esCapitan'));
     }
+    
     public function edit(Equipo $equipo) {}
     public function update(Request $request, Equipo $equipo) {}
     public function destroy(Equipo $equipo) {}
@@ -81,5 +84,23 @@ class EquipoController extends Controller
 
         // 6. Lo llevamos directamente al vestuario del equipo
         return redirect()->route('equipos.show', $equipo->id);
+    }
+
+    // Mostrar el panel de estadísticas del equipo
+    public function estadisticas(Equipo $equipo)
+    {
+        // 1. Contamos totales básicos
+        $totalPartidos = $equipo->partidos()->count();
+        $totalJugadores = $equipo->usuarios()->count();
+
+        // 2. Calculamos el coste total de todas las pistas alquiladas
+        $gastoTotal = $equipo->partidos()->sum('coste_pista');
+
+        // 3. Ranking de jugadores (quién se ha apuntado a más partidos de este equipo)
+        $ranking = $equipo->usuarios()->withCount(['partidos' => function($query) use ($equipo) {
+            $query->where('equipo_id', $equipo->id);
+        }])->orderByDesc('partidos_count')->get();
+
+        return view('equipos.estadisticas', compact('equipo', 'totalPartidos', 'totalJugadores', 'gastoTotal', 'ranking'));
     }
 }
