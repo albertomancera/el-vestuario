@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+       return redirect('/equipos'); 
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -31,6 +31,7 @@ Route::post('/equipos/{equipo}/partidos', [PartidoController::class, 'store'])->
 Route::get('/equipos/{equipo}/partidos/{partido}', [PartidoController::class, 'show'])->name('partidos.show')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/apuntarse', [PartidoController::class, 'apuntarse'])->name('partidos.apuntarse')->middleware(['auth', 'verified']);
 Route::get('/equipos/{equipo}/estadisticas', [EquipoController::class, 'estadisticas'])->name('equipos.estadisticas')->middleware(['auth', 'verified']);
+Route::get('/equipos/{equipo}/resultados', [App\Http\Controllers\EquipoController::class, 'resultados'])->name('equipos.resultados')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/comentar', [PartidoController::class, 'comentar'])->name('partidos.comentar')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/resultado', [PartidoController::class, 'guardarResultado'])->name('partidos.resultado')->middleware(['auth', 'verified']);
 

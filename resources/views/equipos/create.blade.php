@@ -1,42 +1,46 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Crear un Nuevo Equipo
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <div class="py-12 bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full mx-auto sm:px-6 lg:px-8">
+            <div class="animate-fade-in-up bg-white rounded-3xl shadow-xl border border-gray-100 p-10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 p-6 opacity-5">
+                    <svg class="w-24 h-24 text-indigo-900" fill="currentColor" viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
                 
-                <form action="{{ route('equipos.store') }}" method="POST">
-                    @csrf
+                <div class="text-center mb-10 relative z-10">
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Nuevo Equipo</h2>
+                    <p class="text-sm text-gray-500 mt-2">Configura los datos base de tu plantilla</p>
+                </div>
 
-                    <div class="mb-4">
-                        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre del Equipo</label>
+                <form action="{{ route('equipos.store') }}" method="POST" class="space-y-6 relative z-10">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Nombre de la Entidad</label>
                         <input type="text" name="nombre" id="nombre" required 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                               placeholder="Ej. Los Galácticos FC">
+                               class="w-full rounded-2xl border-gray-200 bg-gray-50 py-4 px-6 focus:ring-indigo-500 font-bold text-gray-900"
+                               placeholder="Ej: Rayo Vallecano TFG">
                     </div>
 
-                    <div class="mb-6">
-                        <label for="escudo" class="block text-sm font-medium text-gray-700">Enlace del Escudo (Opcional)</label>
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">URL del Escudo (Opcional)</label>
                         <input type="text" name="escudo" id="escudo" 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                               class="w-full rounded-2xl border-gray-200 bg-gray-50 py-4 px-6 focus:ring-indigo-500 font-medium text-sm text-gray-600"
                                placeholder="https://ejemplo.com/escudo.png">
                     </div>
 
-                    <div class="flex items-center justify-end space-x-3">
-                        <a href="{{ route('equipos.index') }}" class="text-gray-600 hover:text-gray-900">
-                            Cancelar
-                        </a>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 font-bold transition">
-                            Fundar Equipo
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1 tracking-widest uppercase text-sm mt-4">
+                        Registrar Entidad
+                    </button>
+                    
+                    <a href="{{ route('equipos.index') }}" class="block text-center text-xs font-bold text-gray-400 hover:text-indigo-600 transition uppercase tracking-widest mt-4">
+                        Cancelar y Volver
+                    </a>
                 </form>
-
             </div>
         </div>
     </div>
+
+    <style>
+        .animate-fade-in-up { opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </x-app-layout>

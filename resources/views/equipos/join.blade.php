@@ -1,37 +1,42 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Unirse a un Equipo
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <div class="py-12 bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full mx-auto sm:px-6 lg:px-8">
+            <div class="animate-fade-in-up bg-white rounded-3xl shadow-xl border border-gray-100 p-10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-6 opacity-5">
+                    <svg class="w-24 h-24 text-indigo-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
                 
-                <form action="{{ route('equipos.joinStore') }}" method="POST">
-                    @csrf
+                <div class="text-center mb-10 relative z-10">
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Acceso a Vestuario</h2>
+                    <p class="text-sm text-gray-500 mt-2">Introduce el token proporcionado por tu capitán</p>
+                </div>
 
-                    <div class="mb-6">
-                        <label for="codigo" class="block text-sm font-medium text-gray-700">Código de Invitación</label>
+                <form action="{{ route('equipos.joinStore') }}" method="POST" class="space-y-6 relative z-10">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Token de Invitación</label>
                         <input type="text" name="codigo" id="codigo" required 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 font-mono text-center uppercase tracking-widest text-xl"
-                               placeholder="EJ: B348CFFB">
-                        
+                               class="w-full rounded-2xl border-gray-200 bg-gray-50 py-4 px-6 focus:ring-indigo-500 font-mono text-center uppercase tracking-[0.3em] font-black text-2xl text-indigo-900"
+                               placeholder="XXXX-XXXX">
                         @error('codigo')
-                            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                            <p class="text-red-500 text-xs font-bold mt-2 text-center">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="flex items-center justify-end space-x-3">
-                        <a href="{{ route('equipos.index') }}" class="text-gray-600 hover:text-gray-900">Cancelar</a>
-                        <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-900 font-bold transition">
-                            Entrar al Vestuario
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full bg-gray-900 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-black transition transform hover:-translate-y-1 tracking-widest uppercase text-sm">
+                        Verificar y Acceder
+                    </button>
+                    
+                    <a href="{{ route('equipos.index') }}" class="block text-center text-xs font-bold text-gray-400 hover:text-indigo-600 transition uppercase tracking-widest mt-4">
+                        Cancelar y Volver
+                    </a>
                 </form>
-
             </div>
         </div>
     </div>
+
+    <style>
+        .animate-fade-in-up { opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </x-app-layout>

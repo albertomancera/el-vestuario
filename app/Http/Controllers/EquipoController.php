@@ -103,4 +103,16 @@ class EquipoController extends Controller
 
         return view('equipos.estadisticas', compact('equipo', 'totalPartidos', 'totalJugadores', 'gastoTotal', 'ranking'));
     }
+
+    // Mostrar el historial de resultados del equipo
+    public function resultados(Equipo $equipo)
+    {
+        // Traemos solo los partidos ya finalizados y ordenados por fecha
+        $partidos = $equipo->partidos()
+                           ->where('cronica_cerrada', true)
+                           ->orderBy('fecha', 'desc')
+                           ->get();
+
+        return view('equipos.resultados', compact('equipo', 'partidos'));
+    }
 }

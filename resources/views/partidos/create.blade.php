@@ -1,56 +1,63 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Convocar Partido para: {{ $equipo->nombre }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <div class="py-12 bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="max-w-xl w-full mx-auto sm:px-6 lg:px-8">
+            <div class="animate-fade-in-up bg-white rounded-3xl shadow-xl border border-gray-100 p-10">
                 
-                <form action="{{ route('partidos.store', $equipo->id) }}" method="POST">
-                    @csrf
+                <div class="text-center mb-10">
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">
+                        {{ $equipo->nombre }}
+                    </span>
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Nueva Convocatoria</h2>
+                    <p class="text-sm text-gray-500 mt-2">Configura los detalles del próximo encuentro</p>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+                <form action="{{ route('partidos.store', $equipo->id) }}" method="POST" class="space-y-6">
+                    @csrf
+                    
+                    <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha del Partido</label>
-                            <input type="date" name="fecha" id="fecha" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Fecha</label>
+                            <input type="date" name="fecha" required 
+                                   class="w-full rounded-xl border-gray-200 bg-gray-50 py-3 px-4 focus:ring-indigo-500 font-bold text-gray-700 text-sm">
                         </div>
                         <div>
-                            <label for="hora" class="block text-sm font-medium text-gray-700">Hora</label>
-                            <input type="time" name="hora" id="hora" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Hora</label>
+                            <input type="time" name="hora" required 
+                                   class="w-full rounded-xl border-gray-200 bg-gray-50 py-3 px-4 focus:ring-indigo-500 font-bold text-gray-700 text-sm">
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="lugar" class="block text-sm font-medium text-gray-700">Lugar / Pista</label>
-                        <input type="text" name="lugar" id="lugar" required 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Instalación Deportiva</label>
+                        <input type="text" name="lugar" required 
+                               class="w-full rounded-xl border-gray-200 bg-gray-50 py-3 px-4 focus:ring-indigo-500 font-bold text-gray-900"
                                placeholder="Ej. Polideportivo Municipal">
                     </div>
 
-                    <div class="mb-6">
-                        <label for="coste_pista" class="block text-sm font-medium text-gray-700">Coste Total de la Pista (€)</label>
-                        <input type="number" step="0.01" name="coste_pista" id="coste_pista" required 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                               placeholder="Ej. 12.50">
-                        <p class="text-xs text-gray-500 mt-1">Este coste se dividirá luego entre los jugadores que asistan.</p>
+                    <div>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Coste de Reserva (€)</label>
+                        <input type="number" step="0.01" name="coste_pista" required 
+                               class="w-full rounded-xl border-gray-200 bg-gray-50 py-3 px-4 focus:ring-indigo-500 font-black text-indigo-600 text-xl"
+                               placeholder="0.00">
+                        <p class="text-xs font-bold text-gray-400 mt-2">El sistema dividirá este coste automáticamente entre los asistentes confirmados.</p>
                     </div>
 
-                    <div class="flex items-center justify-end space-x-3">
-                        <a href="{{ route('equipos.show', $equipo->id) }}" class="text-gray-600 hover:text-gray-900">
-                            Cancelar
-                        </a>
-                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 font-bold transition">
-                            Confirmar Convocatoria
+                    <div class="pt-4 border-t border-gray-100 flex flex-col space-y-4">
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-4 rounded-xl shadow-md hover:bg-indigo-700 transition transform hover:-translate-y-1 tracking-widest uppercase text-sm">
+                            Generar Convocatoria Oficial
                         </button>
+                        <a href="{{ route('equipos.show', $equipo->id) }}" class="text-center text-xs font-bold text-gray-400 hover:text-indigo-600 transition uppercase tracking-widest">
+                            Cancelar Operación
+                        </a>
                     </div>
                 </form>
 
             </div>
         </div>
     </div>
+
+    <style>
+        .animate-fade-in-up { opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </x-app-layout>
