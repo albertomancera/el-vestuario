@@ -27,11 +27,11 @@ class EquipoController extends Controller
         ]);
 
         // 2. Creamos el equipo en la base de datos
-        // Generamos un código de invitación aleatorio de 8 letras/números
         $equipo = Equipo::create([
             'nombre' => $request->nombre,
             'escudo' => $request->escudo,
             'codigo_invitacion' => strtoupper(substr(uniqid(), -8)) 
+                                //Crea un numero unico, recorta solo los ultimos 8 caracteres y los pone en mayuscula
         ]);
 
         // 3. Unimos al usuario que lo ha creado como CAPITÁN
