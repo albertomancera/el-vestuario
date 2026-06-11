@@ -23,6 +23,16 @@
                 <a href="{{ route('equipos.show', $equipo->id) }}" class="text-sm font-semibold text-gray-500 hover:text-indigo-600 transition-colors">
                     Volver
                 </a>
+                @php $esCapitan = $equipo->usuarios()->where('user_id', auth()->id())->first()?->pivot?->rol === 'capitan'; @endphp
+                @if($esCapitan)
+                    <form action="{{ route('partidos.destroy', [$equipo->id, $partido->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres borrar esta convocatoria entera?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-sm font-bold text-red-500 hover:text-red-700 transition-colors ml-4">
+                            Borrar Partido
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </x-slot>

@@ -100,27 +100,20 @@ class PartidoController extends Controller
         return back()->with('success', 'Comentario publicado en el muro.');
     }
 
-    // Guardar el resultado final del partido y los goles de los jugadores
+    // Guardar el resultado final del partido 
     public function guardarResultado(Request $request, Equipo $equipo, Partido $partido)
     {
-        // 1. Validamos los goles globales
-        $request->validate([
-            'goles_equipo' => 'required|integer|min:0',
-            'goles_rival' => 'required|integer|min:0',
-        ]);
-
-        // 2. Guardamos el resultado general y cerramos el acta
+        // 1. Forzamos el guardado del marcador directamente sin validación estricta
         $partido->update([
             'goles_equipo' => $request->goles_equipo,
             'goles_rival' => $request->goles_rival,
             'cronica_cerrada' => true,
         ]);
 
-        // 3. Si se han enviado goles individuales, los añadimos en la tabla intermedia (pivote)
+        // 2. Guardamos los goles de cada jugador si los hay
         if ($request->has('goles_jugadores')) {
             foreach ($request->goles_jugadores as $jugadorId => $goles) {
                 if ($goles > 0) {
-                    // Actualizamos la columna 'goles' de ese jugador en este partido concreto
                     $partido->usuarios()->updateExistingPivot($jugadorId, [
                         'goles' => $goles
                     ]);
@@ -128,6 +121,23 @@ class PartidoController extends Controller
             }
         }
 
+        // 3. Recargamos la página
         return back()->with('success', '¡Marcador y acta del partido publicados con éxito!');
+    }
+    
+    // Borrar el partido y desvincular todo para que la base de datos no dé error
+    public function destroy(Equipo $equipo, Partido $partido)
+    {
+        // 1. Borramos a los jugadores apuntados (vaciamos la tabla intermedia)
+        $partido->usuarios()->detach();
+
+        // 2. Borramos los comentarios del muro de este partido
+        $partido->comentarios()->delete();
+
+        // 3. Borramos el partido definitivamente
+        $partido->delete();
+
+        // 4. Volvemos al vestuario
+        return redirect()->route('equipos.show', $equipo->id)->with('success', 'Partido borrado correctamente.');
     }
 }

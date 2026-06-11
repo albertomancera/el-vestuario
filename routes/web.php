@@ -34,5 +34,6 @@ Route::get('/equipos/{equipo}/estadisticas', [EquipoController::class, 'estadist
 Route::get('/equipos/{equipo}/resultados', [App\Http\Controllers\EquipoController::class, 'resultados'])->name('equipos.resultados')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/comentar', [PartidoController::class, 'comentar'])->name('partidos.comentar')->middleware(['auth', 'verified']);
 Route::post('/equipos/{equipo}/partidos/{partido}/resultado', [PartidoController::class, 'guardarResultado'])->name('partidos.resultado')->middleware(['auth', 'verified']);
+Route::delete('/equipos/{equipo}/partidos/{partido}', [App\Http\Controllers\PartidoController::class, 'destroy'])->name('partidos.destroy');
 
 Route::resource('equipos', EquipoController::class)->middleware(['auth', 'verified']);
