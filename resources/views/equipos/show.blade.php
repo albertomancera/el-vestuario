@@ -3,9 +3,13 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-black text-3xl text-gray-900 leading-tight tracking-tight flex items-center">
-                    <span class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3 text-xl shadow-md">
-                        {{ strtoupper(substr($equipo->nombre, 0, 1)) }}
-                    </span>
+                    @if($equipo->escudo)
+                        <img src="{{ $equipo->escudo }}" alt="Escudo" class="w-10 h-10 rounded-lg object-contain bg-white border border-gray-200 mr-3 shadow-md">
+                    @else
+                        <span class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-3 text-xl shadow-md">
+                            {{ strtoupper(substr($equipo->nombre, 0, 1)) }}
+                        </span>
+                    @endif
                     {{ $equipo->nombre }}
                 </h2>
                 <p class="text-sm text-gray-500 mt-1 font-medium">Panel general del equipo</p>
@@ -132,6 +136,15 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 Nueva Convocatoria
                             </a>
+
+                            <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="mt-4" onsubmit="return confirm('ATENCIÓN: ¿Estás seguro de que quieres borrar el equipo entero y todos sus partidos? Esta acción no se puede deshacer.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="flex items-center justify-center w-full bg-red-50 text-red-600 border border-red-200 font-bold py-3.5 px-4 rounded-xl hover:bg-red-100 transition-colors duration-200 shadow-sm">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Borrar Equipo Definitivamente
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @else

@@ -65,8 +65,12 @@
                             </div>
 
                             <div class="p-6 flex-1 flex flex-col relative pt-12">
-                                <div class="absolute -top-12 left-6 w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border-4 border-white text-3xl font-black text-indigo-600 transform group-hover:scale-105 transition-transform duration-300">
-                                    {{ strtoupper(substr($equipo->nombre, 0, 1)) }}
+                                <div class="absolute -top-12 left-6 w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border-4 border-white text-3xl font-black text-indigo-600 transform group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                                    @if($equipo->escudo)
+                                        <img src="{{ $equipo->escudo }}" alt="Escudo" class="w-full h-full object-contain p-1">
+                                    @else
+                                        {{ strtoupper(substr($equipo->nombre, 0, 1)) }}
+                                    @endif
                                 </div>
 
                                 <h3 class="text-2xl font-black text-gray-900 mb-2 truncate" title="{{ $equipo->nombre }}">

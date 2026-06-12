@@ -52,8 +52,6 @@ class EquipoController extends Controller
     
     public function edit(Equipo $equipo) {}
     public function update(Request $request, Equipo $equipo) {}
-    public function destroy(Equipo $equipo) {}
-
     // Muestra la pantalla para meter el código
     public function join()
     {
@@ -114,5 +112,25 @@ class EquipoController extends Controller
                            ->get();
 
         return view('equipos.resultados', compact('equipo', 'partidos'));
+    }
+
+    // Borrar el equipo por completo (Solo Capitán)
+    public function destroy(Equipo $equipo)
+    {
+        // 1. Desvinculamos a todos los usuarios del equipo
+        $equipo->usuarios()->detach();
+
+        // 2. Borramos todos los partidos de este equipo y sus dependencias
+        foreach ($equipo->partidos as $partido) {
+            $partido->usuarios()->detach(); // Desvinculamos jugadores del partido
+            $partido->comentarios()->delete(); // Borramos los mensajes del muro
+            $partido->delete(); // Borramos el partido
+        }
+
+        // 3. Finalmente, borramos el equipo
+        $equipo->delete();
+
+        // 4. Devolvemos al usuario a su lista de equipos
+        return redirect()->route('equipos.index');
     }
 }
